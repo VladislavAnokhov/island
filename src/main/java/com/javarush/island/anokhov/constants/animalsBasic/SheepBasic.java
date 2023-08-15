@@ -16,12 +16,11 @@ public class SheepBasic implements Basic{
    static private String name = sheep;
    static private int reproduceCounter = 1;
    static public HashMap<String, Integer> menu = new HashMap<>();
+    static public HashMap<String,Object> basicInfo = new HashMap<>();
 
     static  {
         menu.put(plant,100);
     }
-
-    static public HashMap<String,Object> basicInfo = new HashMap<>();
 
     static {
         basicInfo.put(weightString,weight);
@@ -30,9 +29,9 @@ public class SheepBasic implements Basic{
         basicInfo.put(maxQuantityString,maxQuantityString);
         basicInfo.put(nameString,name);
     }
-    static public HashMap<String, Integer> getMenu(){
 
-        return  menu;
+    static public HashMap<String, Integer> getMenu(){
+        return menu;
     }
     @Override
      public int getMaxQuantity() {

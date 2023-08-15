@@ -1,10 +1,12 @@
 package com.javarush.island.anokhov.Island;
 
+import com.javarush.island.anokhov.nature.Animals.Animal;
 import com.javarush.island.anokhov.nature.Nature;
 
 import java.awt.desktop.PreferencesEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.javarush.island.anokhov.constants.ApplicationCommunication.locationInfo;
@@ -12,22 +14,33 @@ import static com.javarush.island.anokhov.constants.ApplicationCommunication.loc
 public class Location {
 
 
-    private List <Nature> natures = new ArrayList<>();
 
+    private List <Nature> natures = Collections.synchronizedList( new ArrayList<>());
+     private  List<Animal> animals = Collections.synchronizedList( new ArrayList<>());
 
-    public void comeIn(Nature animal){
+   synchronized public void comeIn(Nature animal){
         natures.add(animal);
+        if (animal instanceof Animal animal1){
+            animals.add(animal1);
+        }
     }
-    public void remove (Nature animalOrPlant){
+  synchronized   public void remove (Nature animalOrPlant){
         natures.remove(animalOrPlant);
+      if (animalOrPlant instanceof Animal animal1){
+          animals.remove(animal1);
+      }
     }
-    public void setNatures(List<Nature> natures) {
+   synchronized public void setNatures(List<Nature> natures) {
         this.natures = natures;
     }
-
-    public List<Nature> getNatures() {
+   synchronized public List<Nature> getNatures() {
         return natures;
     }
+   synchronized public List<Animal> getAnimals(){
+       return animals;
+    }
+
+
     public List<Nature> getTypeOfNatures (Nature nature){
         List<Nature> result = new ArrayList<>();
         for (Nature findNature : natures){
@@ -36,24 +49,5 @@ public class Location {
             }
         }
         return result;
-
     }
-
-    @Override
-    public String toString (){
-        String result ="";
-        for (int i = 0; i < natures.size(); i++) {
-            if (natures.size()>1){
-                if (natures.get(i)==null){
-                    result=result+null;
-                }
-                else {
-            result = result + natures.get(i).getName()+", ";}}
-            else result = result + natures.get(i).getName();
-            }
-
-        return locationInfo + result ;//Arrays.toString(natures.toArray())
-    }
-
-
 }

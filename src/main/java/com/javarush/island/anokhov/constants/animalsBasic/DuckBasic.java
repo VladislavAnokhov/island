@@ -6,7 +6,7 @@ import static com.javarush.island.anokhov.constants.Animals.*;
 import static com.javarush.island.anokhov.constants.OtherConstants.*;
 
 public class DuckBasic implements Basic{
-    static private int maxQuantity =  200;
+    static private int maxQuantity =  200;//200
     static private Double weight = 1.0 ;
     static private int speed = 3;
     static private Double wellFed = 0.15 ;

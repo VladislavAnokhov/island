@@ -6,7 +6,7 @@ import static com.javarush.island.anokhov.constants.Animals.*;
 import static com.javarush.island.anokhov.constants.OtherConstants.*;
 
 public class GoatBasic implements Basic{
-   static private int maxQuantity =  140;
+   static private int maxQuantity =  140;//140
    static private Double weight = 60.0;
    static private int speed = 3;
    static private Double wellFed = 10.0;

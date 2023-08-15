@@ -6,7 +6,7 @@ import static com.javarush.island.anokhov.constants.Animals.*;
 import static com.javarush.island.anokhov.constants.OtherConstants.*;
 
 public class RabbitBasic implements Basic{
-   static private int maxQuantity =  150;
+   static private int maxQuantity =  150;//150
    static private Double  weight = 2.0;
    static private int speed = 2;
    static private Double wellFed = 0.45;

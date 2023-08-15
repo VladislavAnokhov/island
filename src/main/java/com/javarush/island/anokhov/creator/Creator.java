@@ -1,4 +1,4 @@
-package com.javarush.island.anokhov.controller;
+package com.javarush.island.anokhov.creator;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.javarush.island.anokhov.Island.Island;

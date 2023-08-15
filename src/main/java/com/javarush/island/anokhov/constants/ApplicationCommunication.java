@@ -1,10 +1,16 @@
 package com.javarush.island.anokhov.constants;
 
 
-public class ApplicationCommunication {
+import java.lang.reflect.Field;
 
+public class ApplicationCommunication {
     static public final String mainWelcome ="  Добро пожаловать, дорогой пользователь! Прежде чем начать, пожалуйста, укажите параметры острова!" +
             " Приятного использования !";
+    static public final String userCounter = " Добро пожаловать, дорогой пользователь! Мир по умолчанию стоит 5 на 5. Укажите сколько циклов должен прожить мир. Если ввести 0, " +
+            "мир доживет до своего окончания.";
+    static public final String dayCounter = "Введите число циклов мира. Если указать 0, мир доживет до своего окончания.";
+    static public final String endOfSimulation = "Симуляция мира завершена";
+    static public final String dailyStatistics = "Ежедневная статистика, день: ";
     static public final String simulationOnWork = "Мир запущен...";
     static public final String startSimulation ="Нажмите \"Enter\" для запуска симуляции";
     static public final String locationInfo = "В этой ячейке находится: ";

@@ -14,10 +14,10 @@ public class WolfBasic implements Basic{
    static private int speed = 3;
    static private Double wellFed = 8.0;
    static private int reproduceCounter = 1;
-
-
     static private String name = wolf;
+    static public HashMap<String,Object> basicInfo = new HashMap<>();
    static public HashMap<String, Integer> menu = new HashMap<>();
+
    static  {
         menu.put(horse,10);
         menu.put(deer,15);
@@ -29,7 +29,7 @@ public class WolfBasic implements Basic{
         menu.put(buffalo,10);
         menu.put(deer,40);
     }
-    static public HashMap<String,Object> basicInfo = new HashMap<>();
+
     static {
         basicInfo.put(weightString,weight);
         basicInfo.put(speedString,speed);
@@ -37,10 +37,11 @@ public class WolfBasic implements Basic{
         basicInfo.put(maxQuantityString,maxQuantityString);
         basicInfo.put(nameString,name);
     }
-   static public HashMap<String, Integer> getMenu(){
 
+   static public HashMap<String, Integer> getMenu(){
        return  menu;
    }
+
    @Override
     public  String getName() {
         return name;

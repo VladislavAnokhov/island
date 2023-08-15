@@ -21,23 +21,24 @@ public class Reproducer implements Callable<Void> {
     private Animal firstParent;
     private Animal secondParent;
     private Location location;
-    private List<Nature> naturesForSynch = new ArrayList<>();
+    private List<Animal> naturesForReproduce = new ArrayList<>();
     private boolean permissionForReproduce = true;
 
 
     @Override
-    public synchronized Void call() {
+    public  Void call() {
         if (!permissionForReproduce) {
+            return null;
+        }
+        if (secondParent == null) {
             return null;
         }
         int fromHash = System.identityHashCode(firstParent);
         int toHash = System.identityHashCode(secondParent);
         if (fromHash < toHash) {
-            synchronized (firstParent) {
+           synchronized (firstParent) {
                 synchronized (secondParent) {
-                    if (secondParent == null) {
-                        return null;
-                    }
+
                     reproduce();
                 }
             }
@@ -46,24 +47,24 @@ public class Reproducer implements Callable<Void> {
         else if (fromHash > toHash) {
             synchronized (secondParent) {
                 synchronized (firstParent) {
-                    if (secondParent == null) {
-                        return null;
-                    }
                     reproduce();
 
                 }
-            }
+           }
         }
         return null;
     }
-    public Reproducer(Animal firstParent){
+    public  Reproducer(Animal firstParent){
 
         this.firstParent = firstParent;
         location = firstParent.getLocation();
-        for (Nature nature : location.getNatures()){
-            if (nature!=null &&nature.getClass().getSimpleName().equalsIgnoreCase(nature.getClass().getSimpleName())){
-            naturesForSynch.add(nature);}
-        }
+        synchronized (location.getAnimals()){
+        for (Animal animal : location.getAnimals()){
+            if (animal!=null &&firstParent.getClass().getSimpleName().equalsIgnoreCase(animal.getClass().getSimpleName())
+                    && !firstParent.getName().equals(animal.getName())){
+                naturesForReproduce.add(animal);
+            }
+        }}
         checkLocationOnQuantity ();
         if(!permissionForReproduce){
             return;
@@ -71,7 +72,9 @@ public class Reproducer implements Callable<Void> {
         secondParent=findSecondParent(firstParent);
     }
 
-    public  void   reproduce() {
+        /**метод размножения с окончательной проверкой на репродукцию
+         * и подсчет шанса на репродукцию (стоит50 на 50)*/
+    public synchronized void reproduce() {
         checkLocationOnQuantity ();
         if(!permissionForReproduce){
             return;
@@ -81,24 +84,23 @@ public class Reproducer implements Callable<Void> {
             }
             if (firstParent.getReproduceCounter()==0){
                 return ;}
-            newBaby(firstParent, secondParent);
 
+        int randomChanceToReduce = ThreadLocalRandom.current().nextInt(0, 100);
+            if (randomChanceToReduce>50) {
+                newBaby(firstParent, secondParent);
+            }
 
     }
 
+
     public synchronized Animal findSecondParent (Animal animal) {
         List<Animal> futureParents = new ArrayList<>(); //массив выбора будущего второго родителя
-        synchronized (naturesForSynch) {
-            for (Nature nature : naturesForSynch) {
-                if (nature instanceof Animal){
-                secondParent = (Animal) nature;
-
+        synchronized (naturesForReproduce) {
+            for (Animal secondParent : naturesForReproduce) {
              if (animal.getClass().getSimpleName().equalsIgnoreCase(secondParent.getClass().getSimpleName()) && secondParent.getReproduceCounter() != 0) {
                     futureParents.add(secondParent);
-                }
+           }
             }
-            }
-
             int randomSecondParent =0;
            if (futureParents.size()>1){
                randomSecondParent = ThreadLocalRandom.current().nextInt(0, futureParents.size());
@@ -112,20 +114,23 @@ public class Reproducer implements Callable<Void> {
         }
     }
 
-     synchronized void newBaby(Animal parent1, Animal parent2) {
-         checkLocationOnQuantity ();
-         if(!permissionForReproduce){
-             return;
-         }
+
+
+    private synchronized void newBaby(Animal parent1, Animal parent2) {
+        checkLocationOnQuantity();
+        if (!permissionForReproduce) {
+            return;
+        }
+
         parent1.setReproduceCounter(0);
-         parent2.setReproduceCounter(0);
+        parent2.setReproduceCounter(0);
         String result = "";
-        Basic base =null;
-        Nature newNature =null;
+        Basic base = null;
+        Nature newNature = null;
         for (int i = 0; i < BasicList.basicAnimalsList.size(); i++) {
-            base = BasicList.basicAnimalsList.get(i);
-            if (base.getName().equalsIgnoreCase(parent1.getClass().getSimpleName())) {
-                result = base.getName();
+             if (BasicList.basicAnimalsList.get(i).getName().equalsIgnoreCase(parent1.getClass().getSimpleName())) {
+                 base = BasicList.basicAnimalsList.get(i);
+                 result = base.getName();
             }
         }
         switch (result) {
@@ -135,6 +140,7 @@ public class Reproducer implements Callable<Void> {
                         base.getWellFed());
                 synchronized (location) {
                     setLocation(newNature);
+
                 }
 
             }
@@ -254,41 +260,44 @@ public class Reproducer implements Callable<Void> {
                 }
             }
         }
-        if (newNature instanceof Predator){
-            synchronized (Statistics.predatorsList){Statistics.setPredatorsList(newNature);}
-        }
-        else synchronized (Statistics.herbivoresList){Statistics.setHerbivoresList(newNature);}
+        if (newNature instanceof Predator) {
+            synchronized (Statistics.predatorsList) {
+                Statistics.setPredatorsList(newNature);
+            }
+        } else {
+            synchronized (Statistics.herbivoresList) {
+                Statistics.setHerbivoresList(newNature);
+            }}
 
-        synchronized (Statistics.wasBorn){
-         Statistics.setWasBorn(newNature);}
-        }
+            synchronized (Statistics.wasBorn) {
+                Statistics.setWasBorn(newNature);
+            }
+            synchronized (Statistics.wasBornDaily) {
+                Statistics.wasBornDaily.add(newNature);
+            }
+
+    }
 
         private synchronized void setLocation(Nature nature){
-            firstParent.getLocation().comeIn(nature);
-            nature.setLocation(firstParent.getLocation());
-        }
+          synchronized (location){
+            location.comeIn(nature);
+            nature.setLocation(location);
+        }}
 
 
-        synchronized private void checkLocationOnQuantity () {
+         private synchronized void checkLocationOnQuantity () {
             Basic base = null;
-              int counterNatureType = 0;
-            for (Nature nature : firstParent.getLocation().getNatures()) {
-                if (firstParent.getClass().getSimpleName().equalsIgnoreCase(nature.getClass().getSimpleName())) {
-                    counterNatureType++;
-                }
-            }
-            for (int i = 0; i < BasicList.basicAnimalsList.size(); i++) {
-                base = BasicList.basicAnimalsList.get(i);
-                if (base.getName().equalsIgnoreCase(firstParent.getClass().getSimpleName())) {
-                    if (base.getMaxQuantity() > counterNatureType) {
-                        permissionForReproduce = true;
+            int counterNatureType = 0;
+                for (int i = 0; i < BasicList.basicAnimalsList.size(); i++) {
+                    base = BasicList.basicAnimalsList.get(i);
+                    if (base.getName().equalsIgnoreCase(firstParent.getClass().getSimpleName())) {
+                        if (base.getMaxQuantity() > counterNatureType) {
+                            permissionForReproduce = true;
+                        } else {
+                            permissionForReproduce = false;
+                        }
 
-                    } else{
-
-                        permissionForReproduce = false;
-                    }
                 }
             }
         }
-
 }

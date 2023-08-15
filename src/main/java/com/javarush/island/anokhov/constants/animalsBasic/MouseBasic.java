@@ -11,7 +11,7 @@ import static com.javarush.island.anokhov.constants.OtherConstants.maxQuantitySt
 
 public class MouseBasic implements Basic{
 
-    static private int maxQuantity =  	500; //500
+    static private int maxQuantity =  500; //500
     static private Double weight = 0.05;
     static private int speed = 1;
     static private Double wellFed = 0.01;

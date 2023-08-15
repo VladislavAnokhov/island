@@ -5,22 +5,18 @@ import com.javarush.island.anokhov.Island.Location;
 import com.javarush.island.anokhov.constants.animalsBasic.Basic;
 import com.javarush.island.anokhov.constants.animalsBasic.BasicList;
 import com.javarush.island.anokhov.constants.animalsBasic.BearBasic;
+import com.javarush.island.anokhov.nature.Animals.Animal;
 import com.javarush.island.anokhov.nature.Animals.Predators.Wolf;
 import com.javarush.island.anokhov.statistics.Statistics;
 import com.javarush.island.anokhov.nature.Nature;
 
-import javax.print.attribute.standard.MediaSize;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import static com.javarush.island.anokhov.constants.ApplicationCommunication.drowned;
-import static com.javarush.island.anokhov.constants.ApplicationCommunication.mainWelcome;
 
-
-//доработать движение , interupt если тонет животное
 
 public class MoveMaker implements Callable<Void> {
      private Island island;
@@ -36,19 +32,22 @@ public class MoveMaker implements Callable<Void> {
 
 
     public MoveMaker(int speed, Nature nature) {
+    //  System.out.println("поток №"+Thread.currentThread().threadId()+"  "+nature.getName() + " начал движение ");
         this.nature = nature;
         this.speed = ThreadLocalRandom.current().nextInt(0, speed + 1);
         if (this.speed == 0) {
-
         }
-
+        Animal animal = (Animal) nature;
+        animal.setSpeed(0);
         }
 
     @Override
     public Void call()  {
-        while (speed>0) {            // проверка скорости и проверка успешности передвижения
+        while (speed>0) {// проверка скорости и проверка успешности передвижения
+
             move();
             clean();
+
         }
         return null;
     }
@@ -109,7 +108,7 @@ public class MoveMaker implements Callable<Void> {
         for (int i = 0; i < island.getMassive().length; i++) {
             for (int j = 0; j < island.getMassive()[i].length; j++) {
                 Location location = island.getMassive()[i][j];
-                List<Nature> clearNatures =  location.getNatures().stream().filter(e->e!=null).collect(Collectors.toList());
+                List<Nature> clearNatures =  location.getNatures().stream().filter(e->e!=null).filter(Nature::getIsAlive).collect(Collectors.toList());
                     location.setNatures(clearNatures);
             }
         }
@@ -222,11 +221,14 @@ public class MoveMaker implements Callable<Void> {
          * обнуляя скорость
          * */
         public void drown(Nature nature){
-
+           // System.out.println(nature.getName()+ " утонул");
             nature.die();
             speed=0;
             synchronized (Statistics.fall){
             Statistics.setFall(nature);}
+            synchronized (Statistics.fallDaily){
+                Statistics.setFallDaily(nature);
+            }
 
         }
         /**проверка вместимости  клетки.

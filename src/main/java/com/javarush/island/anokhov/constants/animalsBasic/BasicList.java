@@ -8,7 +8,7 @@ import java.util.*;
 public class BasicList {
     static public final List <Basic> basicAnimalsList = new ArrayList<>();
     static {
-
+            basicAnimalsList.add(new WolfBasic());
             basicAnimalsList.add(new BearBasic());
             basicAnimalsList.add(new BoaBasic());
             basicAnimalsList.add(new BoarBasic());
@@ -24,8 +24,6 @@ public class BasicList {
             basicAnimalsList.add(new PlantBasic());
             basicAnimalsList.add(new RabbitBasic());
             basicAnimalsList.add(new SheepBasic());
-            basicAnimalsList.add(new WolfBasic());
-
 
 
     }

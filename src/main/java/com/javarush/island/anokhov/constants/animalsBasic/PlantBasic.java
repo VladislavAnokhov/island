@@ -9,7 +9,7 @@ import static com.javarush.island.anokhov.constants.OtherConstants.*;
 public class PlantBasic implements Basic{
    static private Double weight = 1.0;
 
-   static private int  maxQuantity = 1000;//1000
+   static private int  maxQuantity = 200;//200
 
 
     static private String name = plant;

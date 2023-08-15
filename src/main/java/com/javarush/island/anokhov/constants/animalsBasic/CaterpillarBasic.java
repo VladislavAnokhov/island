@@ -6,7 +6,7 @@ import static com.javarush.island.anokhov.constants.Animals.*;
 import static com.javarush.island.anokhov.constants.OtherConstants.*;
 
 public class CaterpillarBasic implements Basic{
-    static private int maxQuantity =  1000;
+    static private int maxQuantity =  1000;//1000
     static private Double weight = 0.01;
     static private int speed = 0;
     static private Double wellFed =0.0 ;

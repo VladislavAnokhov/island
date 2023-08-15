@@ -3,18 +3,55 @@ package com.javarush.island.anokhov.statistics;
 import com.javarush.island.anokhov.nature.Nature;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Statistics {
-
- static volatile public List<Nature> wasBorn = new ArrayList<Nature>();
- static volatile public List<Nature> wasKilled = new ArrayList<Nature>();
- static volatile public List<Nature> fall = new ArrayList<Nature>();
- static volatile public List<Nature> hungryDeath = new ArrayList<Nature>();
- static volatile public List<Nature> predatorsList = new ArrayList<>();
+    static volatile public List<Nature> TESTHUNGRY = new ArrayList<>();
+    static volatile public List<Nature> wasBorn = new ArrayList<Nature>();
+    static public List<Nature> wasBornDaily = new ArrayList<>();
+    static volatile public List<Nature> wasKilled = new ArrayList<Nature>();
+    static public List<Nature> wasKilledDaily = new ArrayList<>();
+     static volatile public List<Nature> fall = new ArrayList<Nature>();
+    static public List<Nature> fallDaily = new ArrayList<>();
+    static volatile public List<Nature> hungryDeath = Collections.synchronizedList( new ArrayList<>());
+    static volatile public List<Nature> hungryDeathDaily =Collections.synchronizedList( new ArrayList<>());
+    static volatile public List<Nature> predatorsList = new ArrayList<>();
     static volatile public List<Nature> totalAnimals = new LinkedList<>();
     static volatile public List<Nature> herbivoresList = new LinkedList<>();
+
+    public static List<Nature> getWasBornDaily() {
+        return wasBornDaily;
+    }
+
+    public static void setWasBornDaily(Nature nature) {
+        wasBornDaily.add(nature);
+    }
+
+    public static List<Nature> getWasKilledDaily() {
+        return wasKilledDaily;
+    }
+
+    public static void setWasKilledDaily(Nature nature) {
+        wasKilledDaily.add(nature);
+    }
+
+    public static List<Nature> getFallDaily() {
+        return fallDaily;
+    }
+
+    public static void setFallDaily(Nature nature) {
+        fallDaily.add(nature);
+    }
+
+    public static List<Nature> getHungryDeathDaily() {
+        return hungryDeathDaily;
+    }
+
+    public static void setHungryDeathDaily(Nature nature) {
+       hungryDeathDaily.add(nature);
+    }
 
     public static List<Nature> getTotalAnimals() {
         return totalAnimals;
@@ -23,8 +60,6 @@ public class Statistics {
     public static void setTotalAnimals(Nature nature) {
         totalAnimals.add(nature);
     }
-
-
 
     public static List<Nature> getPredatorsList() {
         return predatorsList;

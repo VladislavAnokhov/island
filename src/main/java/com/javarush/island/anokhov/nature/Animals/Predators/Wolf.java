@@ -1,7 +1,7 @@
 package com.javarush.island.anokhov.nature.Animals.Predators;
 
 
-import com.javarush.island.anokhov.actions.DiningRoom;
+import com.javarush.island.anokhov.actions.EatingRoom;
 import com.javarush.island.anokhov.Island.Location;
 import com.javarush.island.anokhov.actions.MoveMaker;
 import com.javarush.island.anokhov.actions.Reproducer;
@@ -56,9 +56,16 @@ public class Wolf extends Predator {
         return maxQuantity;
     }
 
+    @Override
     public int getSpeed() {
         return speed;
     }
+
+    @Override
+    public void setSpeed(int speed) {
+        this.speed=speed;
+    }
+
     @Override
     public Double getWellFed() {
         return wellFed;
@@ -90,8 +97,8 @@ public class Wolf extends Predator {
     }
 
     @Override
-    public DiningRoom eat() {
-      DiningRoom diningRoom =new DiningRoom(this,location,wellFed);
+    public EatingRoom eat() {
+      EatingRoom diningRoom =new EatingRoom(this,location,wellFed);
         return diningRoom;
     }
 
@@ -109,7 +116,8 @@ public class Wolf extends Predator {
     @Override
     public void die() {
         isAlive=false;
-        location.remove(this);
+        synchronized (location){
+        location.remove(this);}
         synchronized (Statistics.predatorsList){
         Statistics.getPredatorsList().remove(this);}
     }
